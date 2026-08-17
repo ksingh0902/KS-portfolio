@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import { SectionHeader } from '../components/common/SectionHeader';
 import { aiCapabilitiesData } from '../data/aiCapabilities';
-import { Sparkles, Bot, Layers, Network, Zap, MessageSquare, Search, Code2, ShieldCheck, Share2, Cpu, ArrowRight } from 'lucide-react';
+import { Sparkles, Bot, Layers, Network, Zap, MessageSquare, Search, Code2, ShieldCheck, Share2, Cpu, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { Badge } from '../components/common/Badge';
 import { TiltCard } from '../components/3d/TiltCard';
 import { Button } from '../components/common/Button';
 
 export const AIExpertise: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   const categories = ['All', 'Applications', 'Integration', 'Automation', 'Enterprise'];
 
-  const filteredCapabilities = selectedCategory === 'All'
+  const categoryFiltered = selectedCategory === 'All'
     ? aiCapabilitiesData
     : aiCapabilitiesData.filter(c => c.category === selectedCategory);
+
+  // When 'All' is selected and showAll is false, only show the first 3 cards
+  const displayedCapabilities = (selectedCategory === 'All' && !showAll)
+    ? categoryFiltered.slice(0, 3)
+    : categoryFiltered;
+
+  const hasMore = selectedCategory === 'All' && categoryFiltered.length > 3;
 
   const getIcon = (iconName: string) => {
     const props = { className: 'w-5 h-5 text-purple-400' };
@@ -80,7 +88,10 @@ export const AIExpertise: React.FC = () => {
           {categories.map(cat => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => {
+                setSelectedCategory(cat);
+                if (cat !== 'All') setShowAll(true);
+              }}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                 selectedCategory === cat
                   ? 'bg-purple-500/20 text-purple-300 border border-purple-500/50 shadow-md shadow-purple-500/20'
@@ -94,7 +105,7 @@ export const AIExpertise: React.FC = () => {
 
         {/* Capabilities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCapabilities.map(cap => (
+          {displayedCapabilities.map(cap => (
             <TiltCard key={cap.id} maxTilt={6} className="h-full">
               <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800/90 shadow-xl h-full flex flex-col justify-between space-y-5 hover:border-purple-500/40 transition-all duration-300 group">
                 <div className="space-y-3">
@@ -138,6 +149,31 @@ export const AIExpertise: React.FC = () => {
             </TiltCard>
           ))}
         </div>
+
+        {/* Show More / Show Less Toggle Button */}
+        {hasMore && (
+          <div className="mt-10 flex flex-col items-center justify-center space-y-3">
+            <button
+              onClick={() => setShowAll(prev => !prev)}
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-bold bg-slate-900/90 hover:bg-purple-950/40 text-purple-300 border border-purple-500/40 hover:border-purple-400 shadow-lg shadow-purple-500/10 transition-all duration-300 cursor-pointer group"
+            >
+              <Sparkles className="w-4 h-4 text-purple-400 group-hover:rotate-12 transition-transform" />
+              <span>
+                {showAll
+                  ? 'Show Less Capabilities'
+                  : `Click Here to Show More (${categoryFiltered.length - 3} More Capabilities)`}
+              </span>
+              {showAll ? (
+                <ChevronUp className="w-4 h-4 text-purple-400 group-hover:-translate-y-0.5 transition-transform" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-purple-400 group-hover:translate-y-0.5 transition-transform" />
+              )}
+            </button>
+            <span className="text-xs font-mono text-slate-500">
+              Showing {displayedCapabilities.length} of {categoryFiltered.length} AI capabilities
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );
