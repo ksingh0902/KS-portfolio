@@ -42,7 +42,7 @@ export const siteConfig = {
     availability: 'Available for Full-Stack & AI Consulting',
     responseTime: '< 12 Hours',
     timezone: 'UTC - 4 / Global Remote',
-    github: 'https://github.com/',
+    github: 'https://github.com/ksingh0902',
     linkedin: 'https://linkedin.com/in/',
     upwork: 'https://upwork.com/freelancers/'
   },
