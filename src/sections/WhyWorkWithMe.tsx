@@ -33,10 +33,10 @@ export const WhyWorkWithMe: React.FC = () => {
         />
 
         {/* 6 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 select-none">
           {whyWorkWithMeData.map((item, idx) => (
             <TiltCard key={item.id} maxTilt={6} className="h-full">
-              <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800/90 shadow-xl h-full flex flex-col justify-between space-y-6 hover:border-cyan-500/40 transition-all duration-300 group">
+              <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800/90 shadow-xl h-full flex flex-col justify-between space-y-6 hover:border-cyan-500/40 transition-all duration-300 group cursor-default select-none">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 group-hover:scale-110 transition-transform">
@@ -60,11 +60,11 @@ export const WhyWorkWithMe: React.FC = () => {
                     {item.description}
                   </p>
 
-                  <div className="space-y-2 pt-2 border-t border-slate-800">
+                  <div className="space-y-2 pt-2 border-t border-slate-800 select-none">
                     {item.bullets.map((bullet, bIdx) => (
-                      <div key={bIdx} className="flex items-start gap-2.5 text-xs text-slate-300">
+                      <div key={bIdx} className="flex items-start gap-2.5 text-xs text-slate-300 select-none">
                         <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
-                        <span>{bullet}</span>
+                        <span className="select-none">{bullet}</span>
                       </div>
                     ))}
                   </div>
