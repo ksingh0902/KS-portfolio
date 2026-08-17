@@ -37,8 +37,8 @@ export const Projects: React.FC = () => {
   };
 
   return (
-    <section id="projects" className="py-20 lg:py-28 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="projects" className="py-16 sm:py-20 lg:py-28 relative overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <SectionHeader
           badge="Selected Work"
           badgeIcon={<Briefcase className="w-4 h-4" />}
@@ -47,7 +47,7 @@ export const Projects: React.FC = () => {
               Production-Grade <span className="gradient-text-cyan">Case Studies</span>
             </span>
           }
-          subtitle="Explore 8 enterprise applications and platforms engineered across banking, insurance, IT consulting, logistics, and data analytics."
+          subtitle="Explore 9 enterprise applications and platforms engineered across banking, insurance, IT consulting, logistics, and data analytics."
         />
 
         {/* Filter Pills */}
@@ -67,7 +67,7 @@ export const Projects: React.FC = () => {
           ))}
         </div>
 
-        {/* Project Grid - Clean Enterprise Cards without Screenshots */}
+        {/* Project Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, idx) => (
             <TiltCard key={project.id} maxTilt={6} className="h-full">

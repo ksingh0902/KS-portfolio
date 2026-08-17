@@ -43,7 +43,6 @@ export const Contact: React.FC = () => {
     setErrorMessage(null);
 
     try {
-      // Direct email dispatch to contactksingh.dev@gmail.com with reply-to set to the user's email
       const response = await fetch('https://formsubmit.co/ajax/contactksingh.dev@gmail.com', {
         method: 'POST',
         headers: {
@@ -71,7 +70,6 @@ export const Contact: React.FC = () => {
           origin: { y: 0.6 }
         });
       } else {
-        // In case of service issue, fallback to mailto
         const mailtoUrl = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(
           `Project Inquiry from ${formData.name} [${formData.projectType}]`
         )}&body=${encodeURIComponent(
@@ -84,7 +82,6 @@ export const Contact: React.FC = () => {
       }
     } catch (err) {
       console.error('Submission error, fallback to mail client:', err);
-      // Fallback
       const mailtoUrl = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(
         `Project Inquiry from ${formData.name} [${formData.projectType}]`
       )}&body=${encodeURIComponent(
@@ -106,11 +103,11 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 lg:py-28 relative bg-slate-950/70">
+    <section id="contact" className="py-16 sm:py-20 lg:py-28 relative bg-slate-950/70 overflow-hidden w-full max-w-full">
       {/* Background Glow */}
-      <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 w-full">
         <SectionHeader
           badge="Start A Conversation"
           badgeIcon={<MessageSquare className="w-4 h-4" />}
@@ -123,7 +120,7 @@ export const Contact: React.FC = () => {
         />
 
         {/* Contact Form & Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Column: Direct Info & Communication Channels */}
           <div className="lg:col-span-5 space-y-6">
             <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-6">
@@ -145,12 +142,12 @@ export const Contact: React.FC = () => {
                   Primary Engineering Email
                 </span>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-mono font-medium text-white truncate">
+                  <span className="text-xs sm:text-sm font-mono font-medium text-white truncate">
                     {siteConfig.contact.email}
                   </span>
                   <button
                     onClick={handleCopyEmail}
-                    className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-cyan-300 border border-slate-800 transition-colors flex items-center gap-1 text-xs cursor-pointer"
+                    className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-cyan-300 border border-slate-800 transition-colors flex items-center gap-1 text-xs cursor-pointer flex-shrink-0"
                     title="Copy to clipboard"
                   >
                     {copiedEmail ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -280,7 +277,7 @@ export const Contact: React.FC = () => {
                       </select>
                     </div>
 
-                    {/* Target Budget - Open text input */}
+                    {/* Target Budget */}
                     <div>
                       <label className="block text-xs font-mono text-slate-300 mb-2">
                         Target Budget

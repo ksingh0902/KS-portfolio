@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 interface TiltCardProps {
   children: React.ReactNode;
@@ -17,9 +17,17 @@ export const TiltCard: React.FC<TiltCardProps> = ({
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [glarePos, setGlarePos] = useState({ x: 50, y: 50, opacity: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    // Detect if device is primary touch / no hover
+    if (typeof window !== 'undefined') {
+      setIsTouchDevice(window.matchMedia('(hover: none)').matches || 'ontouchstart' in window);
+    }
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (isTouchDevice || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -35,12 +43,14 @@ export const TiltCard: React.FC<TiltCardProps> = ({
     if (glare) {
       const glareX = (x / rect.width) * 100;
       const glareY = (y / rect.height) * 100;
-      setGlarePos({ x: glareX, y: glareY, opacity: 0.15 });
+      setGlarePos({ x: glareX, y: glareY, opacity: 0.12 });
     }
   };
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
+    if (!isTouchDevice) {
+      setIsHovered(true);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -56,16 +66,16 @@ export const TiltCard: React.FC<TiltCardProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        transform: isHovered
-          ? `perspective(1000px) rotateX(${tilt.x.toFixed(2)}deg) rotateY(${tilt.y.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
-          : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
-        transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out'
+        transform: isHovered && !isTouchDevice
+          ? `perspective(1000px) rotateX(${tilt.x.toFixed(2)}deg) rotateY(${tilt.y.toFixed(2)}deg)`
+          : 'none',
+        transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.4s ease-out'
       }}
-      className={`relative transform-gpu ${className}`}
+      className={`relative ${className}`}
     >
       {children}
 
-      {glare && (
+      {glare && !isTouchDevice && (
         <div
           className="absolute inset-0 pointer-events-none rounded-[inherit] transition-opacity duration-300 z-20"
           style={{

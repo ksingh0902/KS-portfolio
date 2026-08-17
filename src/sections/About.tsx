@@ -37,8 +37,8 @@ export const About: React.FC = () => {
   ];
 
   return (
-    <section id="about" className="py-20 lg:py-28 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="about" className="py-16 sm:py-20 lg:py-28 relative overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <SectionHeader
           badge="About The Engineer"
           badgeIcon={<ShieldCheck className="w-4 h-4" />}
@@ -76,9 +76,9 @@ export const About: React.FC = () => {
           {/* Right: 4 Core Pillar Cards */}
           <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {highlights.map((item, idx) => (
-              <TiltCard key={idx} maxTilt={10} className="h-full">
+              <TiltCard key={idx} maxTilt={6} className="h-full">
                 <div
-                  className={`p-6 rounded-3xl bg-slate-900/90 border ${item.border} shadow-lg h-full flex flex-col justify-between space-y-4 transition-all duration-300 hover:scale-[1.02]`}
+                  className={`p-6 rounded-3xl bg-slate-900/90 border ${item.border} shadow-lg h-full flex flex-col justify-between space-y-4 transition-all duration-300`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800">

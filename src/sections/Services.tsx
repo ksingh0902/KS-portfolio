@@ -23,8 +23,8 @@ export const Services: React.FC = () => {
   };
 
   return (
-    <section id="services" className="py-20 lg:py-28 relative bg-slate-950/40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="services" className="py-16 sm:py-20 lg:py-28 relative bg-slate-950/40 overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <SectionHeader
           badge="Engineering Services"
           badgeIcon={<Layers className="w-4 h-4" />}

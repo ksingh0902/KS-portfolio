@@ -19,8 +19,8 @@ export const WhyWorkWithMe: React.FC = () => {
   };
 
   return (
-    <section id="why" className="py-20 lg:py-28 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="why" className="py-16 sm:py-20 lg:py-28 relative overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <SectionHeader
           badge="Value Proposition"
           badgeIcon={<ShieldCheck className="w-4 h-4" />}

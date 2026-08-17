@@ -5,8 +5,8 @@ import { Cpu } from 'lucide-react';
 
 export const Architecture: React.FC = () => {
   return (
-    <section id="architecture" className="py-20 lg:py-28 relative bg-slate-950/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="architecture" className="py-16 sm:py-20 lg:py-28 relative bg-slate-950/60 overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <SectionHeader
           badge="Enterprise Blueprint"
           badgeIcon={<Cpu className="w-4 h-4" />}
