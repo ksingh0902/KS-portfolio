@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { ArrowRight, Sparkles, ShieldCheck, Terminal, Cpu } from 'lucide-react';
 import { siteConfig } from '../data/config';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
-import { HeroCanvas3D } from '../components/3d/HeroCanvas3D';
 import { TiltCard } from '../components/3d/TiltCard';
 import profileImage from '../assets/profile.jpg';
+
+// Lazy load 3D Canvas so it never blocks first paint
+const HeroCanvas3D = lazy(() => import('../components/3d/HeroCanvas3D'));
 
 export const Hero: React.FC = () => {
   return (
@@ -99,7 +101,15 @@ export const Hero: React.FC = () => {
             {/* 3D Particle Constellation / Tech Orb in Canvas */}
             <div className="w-full relative flex items-center justify-center">
               <div className="absolute inset-0 z-0">
-                <HeroCanvas3D />
+                <Suspense
+                  fallback={
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-48 h-48 rounded-full bg-cyan-500/10 blur-xl animate-pulse" />
+                    </div>
+                  }
+                >
+                  <HeroCanvas3D />
+                </Suspense>
               </div>
 
               {/* Developer Visual / Card */}
@@ -114,6 +124,7 @@ export const Hero: React.FC = () => {
                             src={profileImage}
                             alt="Senior Full-Stack & AI Engineer Profile"
                             className="w-full h-full object-cover object-top"
+                            loading="eager"
                           />
                         </div>
                         <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center shadow-sm">
