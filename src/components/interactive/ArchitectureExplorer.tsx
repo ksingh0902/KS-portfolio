@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layout, Code2, Network, Server, Database, Zap, Cloud, Sparkles, CheckCircle2, Activity } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Layout, Code2, Network, Server, Database, Zap, Cloud, Sparkles, CheckCircle2, Activity, ArrowRight } from 'lucide-react';
 import { Badge } from '../common/Badge';
 
 interface ArchitectureTier {
@@ -17,7 +17,7 @@ interface ArchitectureTier {
 
 export const ArchitectureExplorer: React.FC = () => {
   const [activeTierId, setActiveTierId] = useState<string>('frontend');
-  const [isSimulating, setIsSimulating] = useState<boolean>(true);
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   const tiers: ArchitectureTier[] = [
     {
@@ -207,9 +207,20 @@ const completion = await aiClient.chat.completions.create({
 
   const activeTier = tiers.find(t => t.id === activeTierId) || tiers[0];
 
+  const handleSelectTier = (tierId: string) => {
+    setActiveTierId(tierId);
+
+    // On mobile / tablet screens where layout is vertically stacked, scroll to details card
+    if (typeof window !== 'undefined' && window.innerWidth < 1024 && detailsRef.current) {
+      const yOffset = -80; // Account for sticky navbar height
+      const y = detailsRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="space-y-8">
-      {/* Top Controller Bar */}
+      {/* Top Status Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
@@ -220,21 +231,14 @@ const completion = await aiClient.chat.completions.create({
           </div>
           <span className="hidden sm:inline text-xs text-slate-500">|</span>
           <span className="hidden sm:inline text-xs text-slate-400">
-            Click any layer to inspect technical blueprints &amp; payloads
+            Tap any tier to instantly inspect blueprints &amp; data payloads
           </span>
         </div>
 
-        <button
-          onClick={() => setIsSimulating(!isSimulating)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
-            isSimulating
-              ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/30'
-              : 'bg-slate-800 text-slate-400 border border-slate-700'
-          }`}
-        >
-          <Activity className={`w-3.5 h-3.5 ${isSimulating ? 'animate-pulse text-cyan-400' : ''}`} />
-          <span>{isSimulating ? 'Data Flow: Active' : 'Data Flow: Paused'}</span>
-        </button>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-mono">
+          <Activity className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
+          <span>Active Pipeline (8 Tiers)</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -245,10 +249,10 @@ const completion = await aiClient.chat.completions.create({
             return (
               <React.Fragment key={tier.id}>
                 <div
-                  onClick={() => setActiveTierId(tier.id)}
-                  className={`group relative p-4.5 rounded-2xl border transition-all duration-300 cursor-pointer ${
+                  onClick={() => handleSelectTier(tier.id)}
+                  className={`group relative p-4 sm:p-4.5 rounded-2xl border transition-all duration-300 cursor-pointer ${
                     isActive
-                      ? `bg-slate-900 ${tier.accentBorder} shadow-lg shadow-cyan-950/40 scale-[1.02]`
+                      ? `bg-slate-900 ${tier.accentBorder} shadow-lg shadow-cyan-950/40 scale-[1.01]`
                       : 'bg-slate-900/60 border-slate-800/80 hover:bg-slate-850 hover:border-slate-700'
                   }`}
                 >
@@ -257,10 +261,10 @@ const completion = await aiClient.chat.completions.create({
                     <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-8 rounded-r bg-cyan-400 shadow-[0_0_12px_#38bdf8]" />
                   )}
 
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3.5">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
                       <div
-                        className={`p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 group-hover:scale-110 transition-transform ${
+                        className={`p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 group-hover:scale-110 transition-transform flex-shrink-0 ${
                           isActive ? 'border-cyan-400/50 bg-cyan-500/10' : ''
                         }`}
                       >
@@ -272,7 +276,7 @@ const completion = await aiClient.chat.completions.create({
                           <span className="text-xs font-mono text-slate-400">
                             0{index + 1}
                           </span>
-                          <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                          <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
                             {tier.name}
                           </h3>
                         </div>
@@ -282,27 +286,26 @@ const completion = await aiClient.chat.completions.create({
                       </div>
                     </div>
 
-                    <div className="text-right">
-                      <span className="text-xs font-mono text-slate-400 px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700/60">
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="hidden sm:inline-block text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/60">
                         {tier.technologies.length} Modules
                       </span>
+                      <ArrowRight className={`w-4 h-4 transition-transform ${isActive ? 'text-cyan-400 translate-x-1' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     </div>
                   </div>
                 </div>
 
                 {/* Animated Data Packet Connector */}
                 {index < tiers.length - 1 && (
-                  <div className="flex justify-center my-0.5 relative h-4">
+                  <div className="flex justify-center my-0.5 relative h-3.5">
                     <div className="w-0.5 h-full bg-slate-800 relative overflow-hidden">
-                      {isSimulating && (
-                        <div
-                          className="w-full h-2 bg-gradient-to-b from-cyan-400 to-blue-500 animate-pulse-slow"
-                          style={{
-                            animationDuration: '1.2s',
-                            animationIterationCount: 'infinite'
-                          }}
-                        />
-                      )}
+                      <div
+                        className="w-full h-2 bg-gradient-to-b from-cyan-400 to-blue-500 animate-pulse-slow"
+                        style={{
+                          animationDuration: '1.2s',
+                          animationIterationCount: 'infinite'
+                        }}
+                      />
                     </div>
                   </div>
                 )}
@@ -312,19 +315,19 @@ const completion = await aiClient.chat.completions.create({
         </div>
 
         {/* Right Column: Detailed Inspector Card */}
-        <div className="lg:col-span-6 sticky top-24">
-          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl backdrop-blur-xl space-y-6">
+        <div ref={detailsRef} className="lg:col-span-6 lg:sticky lg:top-24 scroll-mt-24">
+          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/95 border border-slate-800 shadow-2xl backdrop-blur-xl space-y-6">
             {/* Header */}
             <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-5">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/30">
+                <div className="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex-shrink-0">
                   {activeTier.icon}
                 </div>
                 <div>
-                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider block">
                     Architecture Deep-Dive
                   </span>
-                  <h3 className="text-2xl font-extrabold text-white">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-white">
                     {activeTier.name}
                   </h3>
                 </div>
@@ -376,7 +379,7 @@ const completion = await aiClient.chat.completions.create({
                 </h4>
                 <span className="text-[11px] font-mono text-cyan-400">TypeScript / Schema</span>
               </div>
-              <div className="rounded-xl bg-slate-950 p-4 border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto">
+              <div className="rounded-xl bg-slate-950 p-4 border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto max-w-full">
                 <pre>
                   <code>{activeTier.samplePayload}</code>
                 </pre>
